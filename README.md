@@ -36,7 +36,32 @@ Example response:
     "group": 0
 }
 ```
-All endpoints and examples are in the documentation:
+## Endpoints
+Tokens:
+- .../api/v1/jwt/create/ - create token (POST)
+- .../api/v1/jwt/refresh/ - refresh token (POST)
+- .../api/v1/jwt/verify/ - check token validity (POST)
+
+Each of the above resources must be requested with the transfer of authorization data via username and password
+
+Posts:
+- .../api/v1/posts/ - list of posts (GET) or create post(POST, only for authorized)
+- .../api/v1/posts/{id}/ - post object (GET, PUT, PATCH, DELETE). Only the author has access to editing.
+
+Comments:
+- .../api/v1/posts/{post_id}/comments/ - list of comments (GET) or create comment (POST, only for authorized)
+- .../api/v1/posts/{post_id}/comments/{id}/ - comment object (GET, PUT, PATCH, DELETE). Only the author has access to editing.
+
+Groups:
+- .../api/v1/groups/ - list of groups (GET)
+- .../api/v1/groups/{id}/ - group object (GET)
+
+Follow:
+- .../api/v1/follow/ - list of follows (GET) or create follow (POST, only for authorized)
+
+
+
+Examples and required payload are in the documentation:
 ```
 GET http://127.0.0.1:8000/redoc/
 ```
