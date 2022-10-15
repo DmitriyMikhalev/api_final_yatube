@@ -1,11 +1,11 @@
 import base64
 
 from django.core.files.base import ContentFile
-from django.shortcuts import get_object_or_404
 from posts.models import Comment, Follow, Group, Post, User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
+from rest_framework.validators import UniqueTogetherValidator
 
 
 class Base64ImageField(serializers.ImageField):
@@ -36,6 +36,7 @@ class FollowSerializer(serializers.ModelSerializer):
         slug_field='username'
     )
     user = SlugRelatedField(
+        default=serializers.CurrentUserDefault(),
         read_only=True,
         slug_field='username'
     )
@@ -43,19 +44,17 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('user', 'following')
         model = Follow
+        validators = [
+            UniqueTogetherValidator(
+                fields=('user', 'following'),
+                queryset=Follow.objects.all(),
+                message='Multiple follows are not allowed.'
+            )
+        ]
 
     def validate(self, data):
-        user = self.context['request'].user
-        to_follow = get_object_or_404(
-            klass=User,
-            username=data['following'].username
-        )
-
-        if user == to_follow:
-            raise ValidationError('You can\'t follow yourself.')
-
-        if Follow.objects.filter(user=user, following=to_follow).exists():
-            raise ValidationError('You have already followed.')
+        if self.context['request'].user == data['following']:
+            raise ValidationError('Self follow is not available.')
 
         return data
 

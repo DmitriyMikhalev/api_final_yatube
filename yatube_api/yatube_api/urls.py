@@ -8,7 +8,7 @@ urlpatterns = [
         admin.site.urls
     ),
     path(
-        'api/v1/',
+        'api/',
         include('api.urls', namespace='api')
     ),
     path(

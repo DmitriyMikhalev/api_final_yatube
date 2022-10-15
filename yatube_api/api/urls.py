@@ -7,27 +7,28 @@ app_name = 'api'
 
 router_v1 = DefaultRouter()
 router_v1.register(
-    viewset=PostViewSet,
-    prefix=r'^posts'
+    basename='posts',
+    prefix=r'^posts',
+    viewset=PostViewSet
 )
 router_v1.register(
-    viewset=GroupViewSet,
-    prefix=r'^groups'
+    basename='groups',
+    prefix=r'^groups',
+    viewset=GroupViewSet
 )
 router_v1.register(
-    viewset=FollowViewSet,
+    basename='follow',
     prefix=r'^follow',
-    basename='follow'
+    viewset=FollowViewSet
 )
 router_v1.register(
-    viewset=CommentViewSet,
+    basename='comment',
     prefix=r'^posts/(?P<post_id>\d+)/comments',
-    basename='comment'
+    viewset=CommentViewSet
 )
 
 
 urlpatterns = [
-    path('', include('djoser.urls')),
-    path('', include('djoser.urls.jwt')),
-    path('', include(router_v1.urls))
+    path('v1/', include('djoser.urls.jwt')),
+    path('v1/', include(router_v1.urls))
 ]
